@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>متابعة فواتير المحبة</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --card2: #1c2230;
+    --border: #30363d;
+    --accent: #f0a500;
+    --accent2: #e05c00;
+    --green: #3fb950;
+    --red: #f85149;
+    --blue: #58a6ff;
+    --text: #e6edf3;
+    --muted: #8b949e;
+  }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  header {
+    text-align: center;
+    padding: 30px 0 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 30px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  header p { color: var(--muted); font-size: 0.9rem; margin-top: 5px; }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .summary-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+  }
+
+  .summary-card .label { font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
+  .summary-card .value { font-size: 1.6rem; font-weight: 700; }
+  .summary-card.invoices .value { color: var(--blue); }
+  .summary-card.total-inv .value { color: var(--text); }
+  .summary-card.returns .value { color: var(--red); }
+  .summary-card.net .value { color: var(--green); }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: #ffc125; }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-danger:hover { background: #da3633; }
+  .btn-success { background: var(--green); color: #000; }
+  .btn-success:hover { background: #3dd68c; }
+  .btn-ghost { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--border); }
+  .btn-blue { background: var(--blue); color: #000; }
+  .btn-blue:hover { background: #79c0ff; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; }
+  .form-group input, .form-group select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+  /* Scanner */
+  .scanner-area {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+  }
+  .scanner-area:hover { border-color: var(--accent); }
+  .scanner-area.dragover { border-color: var(--accent); background: rgba(240,165,0,0.05); }
+  .scanner-area .icon { font-size: 3rem; margin-bottom: 10px; }
+  .scanner-area p { color: var(--muted); font-size: 0.9rem; }
+  .scanner-area input[type=file] { display: none; }
+
+  #previewImg {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    display: none;
+    object-fit: contain;
+  }
+
+  .scanning-status {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(88,166,255,0.1);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    color: var(--blue);
+  }
+  .scanning-status.active { display: flex; }
+
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Table */
+  .table-container {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .table-header h3 { font-size: 1rem; font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--card2); }
+  th {
+    padding: 12px 16px;
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+  .type-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .type-invoice { background: rgba(88,166,255,0.15); color: var(--blue); }
+  .type-return { background: rgba(248,81,73,0.15); color: var(--red); }
+
+  .amount-invoice { color: var(--text); font-weight: 600; }
+  .amount-return { color: var(--red); font-weight: 600; }
+
+  .action-btns { display: flex; gap: 6px; }
+  .icon-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 8px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+    font-size: 0.9rem;
+  }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .icon-btn.del:hover { border-color: var(--red); color: var(--red); }
+
+  .empty-state {
+    text-align: center;
+    padding: 50px;
+    color: var(--muted);
+  }
+  .empty-state .icon { font-size: 3rem; margin-bottom: 10px; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    z-index: 9999;
+    transition: transform 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { border-color: var(--green); color: var(--green); }
+  .toast.error { border-color: var(--red); color: var(--red); }
+
+  /* Edit inline highlight */
+  .editing td { background: rgba(240,165,0,0.04); }
+
+  .net-total-row td {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--green);
+    background: rgba(63,185,80,0.07);
+  }
+
+  @media (max-width: 600px) {
+    table { font-size: 0.8rem; }
+    th, td { padding: 8px 10px; }
+    .actions { flex-direction: column; }
+    .btn { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📋 متابعة فواتير المحبة</h1>
+  <p>تسجيل وتتبع الفواتير والمرتجعات — إجمالي صافي المبلغ المطلوب</p>
+</header>
+
+<!-- Summary -->
+<div class="summary-grid">
+  <div class="summary-card invoices">
+    <div class="label">عدد الفواتير</div>
+    <div class="value" id="countInvoices">0</div>
+  </div>
+  <div class="summary-card total-inv">
+    <div class="label">إجمالي الفواتير</div>
+    <div class="value" id="totalInvoices">0.00</div>
+  </div>
+  <div class="summary-card returns">
+    <div class="label">إجمالي المرتجعات</div>
+    <div class="value" id="totalReturns">0.00</div>
+  </div>
+  <div class="summary-card net">
+    <div class="label">💰 الصافي المطلوب</div>
+    <div class="value" id="netTotal">0.00</div>
+  </div>
+</div>
+
+<!-- Actions -->
+<div class="actions">
+  <label for="cameraInput" class="btn btn-primary" style="cursor:pointer" onclick="openScanModal()">📷 كاميرا مباشر</label>
+  <label for="galleryInput" class="btn btn-blue" style="cursor:pointer" onclick="openScanModal()">🖼️ من الجاليري</label>
+  <button class="btn btn-ghost" onclick="openAddModal('invoice')">➕ إضافة فاتورة يدوياً</button>
+  <button class="btn btn-danger" onclick="openAddModal('return')">↩️ إضافة أشعار مرتجع</button>
+  <button class="btn btn-success" onclick="exportPDF()">📄 تصدير تقرير PDF</button>
+  <button class="btn btn-ghost" onclick="clearAll()">🗑️ مسح الكل</button>
+  <button class="btn btn-ghost" onclick="openKeyModal()" id="keyStatusBtn">🔑 API Key</button>
+</div>
+
+<!-- Table -->
+<div class="table-container">
+  <div class="table-header">
+    <h3>📑 سجل الفواتير والمرتجعات</h3>
+    <span style="color:var(--muted);font-size:0.8rem;" id="recordCount">0 سجل</span>
+  </div>
+  <div id="tableBody">
+    <div class="empty-state">
+      <div class="icon">🗂️</div>
+      <p>لا توجد فواتير مسجلة بعد</p>
+      <p style="font-size:0.8rem;margin-top:5px;">استخدم زر المسح الضوئي أو الإضافة اليدوية</p>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h2 id="modalTitle">➕ إضافة فاتورة</h2>
+    <input type="hidden" id="editId">
+
+    <div class="form-group">
+      <label>النوع</label>
+      <select id="fType">
+        <option value="invoice">فاتورة</option>
+        <option value="return">أشعار مرتجع</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>رقم الفاتورة / الأشعار</label>
+      <input type="text" id="fNumber" placeholder="مثال: 2611721">
+    </div>
+    <div class="form-group">
+      <label>التاريخ</label>
+      <input type="date" id="fDate">
+    </div>
+    <div class="form-group">
+      <label>المبلغ (جنيه)</label>
+      <input type="number" id="fAmount" placeholder="مثال: 856.80" step="0.01" min="0">
+    </div>
+    <div class="form-group">
+      <label>ملاحظات (اختياري)</label>
+      <input type="text" id="fNotes" placeholder="أي ملاحظة إضافية">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveEntry()" style="flex:1">💾 حفظ</button>
+      <button class="btn btn-ghost" onclick="closeModal('addModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- API Key Setup Modal -->
+<div class="modal-overlay" id="keyModal">
+  <div class="modal">
+    <h2>🔑 إعداد API Key</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:16px;line-height:1.6">
+      عشان المسح الضوئي يشتغل، محتاج تضع Anthropic API Key.<br>
+      احصل عليه من: <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent)">console.anthropic.com</a>
+    </p>
+    <div class="form-group">
+      <label>API Key</label>
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-..." autocomplete="off">
+    </div>
+    <p style="color:var(--muted);font-size:0.78rem;margin-bottom:16px">
+      🔒 الـ Key بيتحفظ في متصفحك فقط ومش بيتبعت لأي حد غير Anthropic
+    </p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveApiKey()" style="flex:1">💾 حفظ وتأكيد</button>
+      <button class="btn btn-ghost" onclick="closeModal('keyModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- File inputs at body level so modals don't block them -->
+<input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+<input type="file" id="galleryInput" accept="image/*" style="display:none">
+
+<!-- Scanner Modal -->
+<div class="modal-overlay" id="scanModal">
+  <div class="modal">
+    <h2>📷 مسح فاتورة ضوئياً</h2>
+
+    <div style="display:flex;gap:12px;margin-bottom:16px;">
+      <label for="cameraInput" class="btn btn-primary" style="flex:1;justify-content:center;padding:18px;cursor:pointer;flex-direction:column;gap:4px">
+        📷<span style="font-size:0.8rem">كاميرا مباشر</span>
+      </label>
+      <label for="galleryInput" class="btn btn-ghost" style="flex:1;justify-content:center;padding:18px;cursor:pointer;flex-direction:column;gap:4px">
+        🖼️<span style="font-size:0.8rem">من الجاليري</span>
+      </label>
+    </div>
+
+    <div class="scanner-area" id="dropZone"
+         ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragleave="this.classList.remove('dragover')">
+      <div class="icon">📂</div>
+      <p>أو اسحب وأفلت صورة الفاتورة هنا</p>
+    </div>
+
+    <img id="previewImg" alt="معاينة الفاتورة">
+
+    <div class="scanning-status" id="scanStatus">
+      <div class="spinner"></div>
+      <span>جاري تحليل الفاتورة بالذكاء الاصطناعي...</span>
+    </div>
+
+    <div id="scanError" style="display:none;background:rgba(248,81,73,0.1);border:1px solid var(--red);border-radius:8px;padding:12px;color:var(--red);font-size:0.85rem;margin-bottom:12px;direction:rtl"></div>
+
+    <div id="scanResult" style="display:none">
+      <p style="color:var(--green);margin-bottom:12px;font-size:0.9rem;">✅ تم استخراج البيانات — راجع وعدّل إذا لزم:</p>
+
+      <div class="form-group">
+        <label>النوع</label>
+        <select id="sType">
+          <option value="invoice">فاتورة</option>
+          <option value="return">أشعار مرتجع</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>رقم الفاتورة</label>
+        <input type="text" id="sNumber">
+      </div>
+      <div class="form-group">
+        <label>التاريخ</label>
+        <input type="date" id="sDate">
+      </div>
+      <div class="form-group">
+        <label>المبلغ (جنيه)</label>
+        <input type="number" id="sAmount" step="0.01" min="0">
+      </div>
+      <div class="form-group">
+        <label>ملاحظات</label>
+        <input type="text" id="sNotes">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="saveScanned()" style="flex:1">✅ إضافة للسجل</button>
+        <button class="btn btn-ghost" onclick="resetScanner()">🔄 مسح جديد</button>
+      </div>
+    </div>
+
+    <div style="margin-top:15px;text-align:left">
+      <button class="btn btn-ghost" onclick="closeModal('scanModal')">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA =====
+let entries = JSON.parse(localStorage.getItem('mahaba_entries') || '[]');
+
+function save() {
+  localStorage.setItem('mahaba_entries', JSON.stringify(entries));
+}
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+// ===== RENDER =====
+function render() {
+  const body = document.getElementById('tableBody');
+  
+  if (entries.length === 0) {
+    body.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🗂️</div>
+        <p>لا توجد فواتير مسجلة بعد</p>
+        <p style="font-size:0.8rem;margin-top:5px;">استخدم زر المسح الضوئي أو الإضافة اليدوية</p>
+      </div>`;
+    updateSummary();
+    return;
+  }
+
+  const sorted = [...entries].sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  let html = `<table>
+    <thead><tr>
+      <th>#</th>
+      <th>رقم الفاتورة</th>
+      <th>التاريخ</th>
+      <th>النوع</th>
+      <th>المبلغ (ج)</th>
+      <th>ملاحظات</th>
+      <th>إجراءات</th>
+    </tr></thead><tbody>`;
+
+  sorted.forEach((e, i) => {
+    const isReturn = e.type === 'return';
+    html += `
+    <tr>
+      <td style="color:var(--muted)">${i + 1}</td>
+      <td><strong>${e.number || '—'}</strong></td>
+      <td>${formatDate(e.date)}</td>
+      <td><span class="type-badge ${isReturn ? 'type-return' : 'type-invoice'}">${isReturn ? '↩️ مرتجع' : '📄 فاتورة'}</span></td>
+      <td class="${isReturn ? 'amount-return' : 'amount-invoice'}">${isReturn ? '-' : ''}${parseFloat(e.amount).toFixed(2)}</td>
+      <td style="color:var(--muted);font-size:0.82rem">${e.notes || '—'}</td>
+      <td>
+        <div class="action-btns">
+          <button class="icon-btn" onclick="editEntry('${e.id}')" title="تعديل">✏️</button>
+          <button class="icon-btn del" onclick="deleteEntry('${e.id}')" title="حذف">🗑️</button>
+        </div>
+      </td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  body.innerHTML = html;
+  updateSummary();
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  const parts = d.split('-');
+  if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  return d;
+}
+
+function updateSummary() {
+  const invoices = entries.filter(e => e.type === 'invoice');
+  const returns = entries.filter(e => e.type === 'return');
+  const totalInv = invoices.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
+  const totalRet = returns.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
+  const net = totalInv - totalRet;
+
+  document.getElementById('countInvoices').textContent = invoices.length;
+  document.getElementById('totalInvoices').textContent = totalInv.toFixed(2);
+  document.getElementById('totalReturns').textContent = totalRet.toFixed(2);
+  document.getElementById('netTotal').textContent = net.toFixed(2);
+  document.getElementById('recordCount').textContent = `${entries.length} سجل`;
+}
+
+// ===== MODALS =====
+function openAddModal(type = 'invoice') {
+  document.getElementById('editId').value = '';
+  document.getElementById('fType').value = type;
+  document.getElementById('fNumber').value = '';
+  document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('fAmount').value = '';
+  document.getElementById('fNotes').value = '';
+  document.getElementById('modalTitle').textContent = type === 'invoice' ? '➕ إضافة فاتورة' : '↩️ إضافة أشعار مرتجع';
+  document.getElementById('addModal').classList.add('active');
+}
+
+function editEntry(id) {
+  const e = entries.find(x => x.id === id);
+  if (!e) return;
+  document.getElementById('editId').value = id;
+  document.getElementById('fType').value = e.type;
+  document.getElementById('fNumber').value = e.number || '';
+  document.getElementById('fDate').value = e.date || '';
+  document.getElementById('fAmount').value = e.amount || '';
+  document.getElementById('fNotes').value = e.notes || '';
+  document.getElementById('modalTitle').textContent = '✏️ تعديل السجل';
+  document.getElementById('addModal').classList.add('active');
+}
+
+function saveEntry() {
+  const number = document.getElementById('fNumber').value.trim();
+  const date = document.getElementById('fDate').value;
+  const amount = parseFloat(document.getElementById('fAmount').value);
+  const type = document.getElementById('fType').value;
+  const notes = document.getElementById('fNotes').value.trim();
+
+  if (!number) { showToast('أدخل رقم الفاتورة', 'error'); return; }
+  if (!date) { showToast('أدخل التاريخ', 'error'); return; }
+  if (isNaN(amount) || amount <= 0) { showToast('أدخل المبلغ بشكل صحيح', 'error'); return; }
+
+  const editId = document.getElementById('editId').value;
+
+  if (editId) {
+    const idx = entries.findIndex(e => e.id === editId);
+    if (idx !== -1) { entries[idx] = { ...entries[idx], type, number, date, amount, notes }; }
+    showToast('✅ تم التعديل', 'success');
+  } else {
+    entries.push({ id: genId(), type, number, date, amount, notes });
+    showToast('✅ تمت الإضافة', 'success');
+  }
+
+  save();
+  render();
+  closeModal('addModal');
+}
+
+function deleteEntry(id) {
+  if (!confirm('هل تريد حذف هذا السجل؟')) return;
+  entries = entries.filter(e => e.id !== id);
+  save();
+  render();
+  showToast('تم الحذف', 'error');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+// ===== API KEY =====
+function getApiKey() {
+  return localStorage.getItem('mahaba_api_key') || '';
+}
+
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key.startsWith('sk-')) {
+    showToast('الـ Key غلط — لازم يبدأ بـ sk-', 'error');
+    return;
+  }
+  localStorage.setItem('mahaba_api_key', key);
+  updateKeyBtn();
+  closeModal('keyModal');
+  showToast('✅ تم حفظ الـ API Key', 'success');
+}
+
+function openKeyModal() {
+  const existing = getApiKey();
+  document.getElementById('apiKeyInput').value = existing;
+  document.getElementById('keyModal').classList.add('active');
+}
+
+function updateKeyBtn() {
+  const btn = document.getElementById('keyStatusBtn');
+  if (getApiKey()) {
+    btn.textContent = '🟢 API Key';
+    btn.style.borderColor = 'var(--green)';
+    btn.style.color = 'var(--green)';
+  } else {
+    btn.textContent = '🔑 API Key';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  }
+}
+
+// ===== SCANNER =====
+let scannedImageBase64 = null;
+
+// Wire up file inputs
+document.getElementById('cameraInput').addEventListener('change', handleFileSelect);
+document.getElementById('galleryInput').addEventListener('change', handleFileSelect);
+
+function openScanModal() {
+  if (!getApiKey()) {
+    showToast('أدخل الـ API Key أولاً', 'error');
+    openKeyModal();
+    return;
+  }
+  resetScanner();
+  document.getElementById('scanModal').classList.add('active');
+}
+
+function resetScanner() {
+  document.getElementById('previewImg').style.display = 'none';
+  document.getElementById('previewImg').src = '';
+  document.getElementById('scanStatus').classList.remove('active');
+  document.getElementById('scanResult').style.display = 'none';
+  document.getElementById('scanError').style.display = 'none';
+  document.getElementById('cameraInput').value = '';
+  document.getElementById('galleryInput').value = '';
+  scannedImageBase64 = null;
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.add('dragover');
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+}
+
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if (file) processFile(file);
+}
+
+function processFile(file) {
+  if (!file.type.startsWith('image/')) { showToast('من فضلك اختر صورة', 'error'); return; }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const base64Full = e.target.result;
+    scannedImageBase64 = base64Full.split(',')[1];
+    
+    const img = document.getElementById('previewImg');
+    img.src = base64Full;
+    img.style.display = 'block';
+    
+    scanInvoice(scannedImageBase64, file.type);
+  };
+  reader.readAsDataURL(file);
+}
+
+async function scanInvoice(base64Data, mediaType) {
+  document.getElementById('scanStatus').classList.add('active');
+  document.getElementById('scanResult').style.display = 'none';
+  document.getElementById('scanError').style.display = 'none';
+
+  // Compress image if too large (max ~1MB base64)
+  let finalBase64 = base64Data;
+  let finalType = mediaType || 'image/jpeg';
+  if (base64Data.length > 1400000) {
+    try {
+      finalBase64 = await compressImage(base64Data, finalType);
+      finalType = 'image/jpeg';
+    } catch(e) { /* use original */ }
+  }
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": getApiKey(),
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 500,
+        messages: [{
+          role: "user",
+          content: [
+            {
+              type: "image",
+              source: { type: "base64", media_type: finalType, data: finalBase64 }
+            },
+            {
+              type: "text",
+              text: `انظر لهذه الفاتورة واستخرج هذه البيانات. أجب بـ JSON فقط بدون أي نص آخر:
+{"type":"invoice","number":"رقم الفاتورة","date":"YYYY-MM-DD","amount":0,"notes":""}
+
+قواعد:
+- type: invoice للفاتورة العادية، return لأشعار المرتجع
+- number: رقم الفاتورة من أعلى الورقة
+- date: التاريخ بصيغة YYYY-MM-DD فقط
+- amount: رقم إجمالي الجمهور أو الإجمالي النهائي (رقم فقط بدون كلمة جنيه)
+JSON فقط:`
+            }
+          ]
+        }]
+      })
+    });
+
+    const data = await response.json();
+
+    // Check for API error
+    if (data.error) {
+      throw new Error(data.error.message || 'خطأ من الـ API');
+    }
+
+    const text = data.content?.[0]?.text || '';
+    if (!text) throw new Error('الـ API لم يرجع بيانات');
+
+    let parsed;
+    try {
+      const clean = text.replace(/```json|```/gi, '').trim();
+      // Extract JSON if wrapped in other text
+      const jsonMatch = clean.match(/\{[\s\S]*\}/);
+      parsed = JSON.parse(jsonMatch ? jsonMatch[0] : clean);
+    } catch {
+      throw new Error('فشل تحليل JSON: ' + text.substring(0, 100));
+    }
+
+    document.getElementById('sType').value = parsed.type === 'return' ? 'return' : 'invoice';
+    document.getElementById('sNumber').value = parsed.number || '';
+
+    // Normalize date to YYYY-MM-DD
+    let dateVal = String(parsed.date || '');
+    if (dateVal.includes('/')) {
+      const p = dateVal.split('/');
+      if (p.length === 3) {
+        // Could be DD/MM/YYYY or MM/DD/YYYY — assume DD/MM/YYYY for Egypt
+        const y = p[2].length === 4 ? p[2] : '20' + p[2];
+        dateVal = `${y}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
+      }
+    }
+    document.getElementById('sDate').value = dateVal;
+    document.getElementById('sAmount').value = parsed.amount || '';
+    document.getElementById('sNotes').value = parsed.notes || '';
+
+    document.getElementById('scanResult').style.display = 'block';
+    showToast('✅ تم استخراج البيانات', 'success');
+
+  } catch (err) {
+    console.error('Scan error:', err);
+    const errBox = document.getElementById('scanError');
+    errBox.textContent = '⚠️ ' + err.message + ' — راجع البيانات يدوياً';
+    errBox.style.display = 'block';
+    // Still show form for manual entry
+    document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('scanResult').style.display = 'block';
+  } finally {
+    document.getElementById('scanStatus').classList.remove('active');
+  }
+}
+
+// Compress image helper
+function compressImage(base64, type) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      const max = 1200;
+      if (w > max || h > max) {
+        if (w > h) { h = Math.round(h * max / w); w = max; }
+        else { w = Math.round(w * max / h); h = max; }
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', 0.85).split(',')[1]);
+    };
+    img.onerror = reject;
+    img.src = 'data:' + type + ';base64,' + base64;
+  });
+}
+
+function saveScanned() {
+  const number = document.getElementById('sNumber').value.trim();
+  const date = document.getElementById('sDate').value;
+  const amount = parseFloat(document.getElementById('sAmount').value);
+  const type = document.getElementById('sType').value;
+  const notes = document.getElementById('sNotes').value.trim();
+
+  if (!number) { showToast('أدخل رقم الفاتورة', 'error'); return; }
+  if (isNaN(amount) || amount <= 0) { showToast('أدخل المبلغ بشكل صحيح', 'error'); return; }
+
+  entries.push({ id: genId(), type, number, date, amount, notes });
+  save();
+  render();
+  closeModal('scanModal');
+  showToast('✅ تمت إضافة الفاتورة', 'success');
+}
+
+// ===== PDF EXPORT =====
+function exportPDF() {
+  if (entries.length === 0) { showToast('لا توجد بيانات للتصدير', 'error'); return; }
+
+  const invoices = entries.filter(e => e.type === 'invoice');
+  const returns = entries.filter(e => e.type === 'return');
+  const totalInv = invoices.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
+  const totalRet = returns.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
+  const net = totalInv - totalRet;
+
+  const sorted = [...entries].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const printWin = window.open('', '_blank');
+  printWin.document.write(`<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>تقرير فواتير المحبة</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Cairo', Arial, sans-serif; padding: 30px; color: #1a1a2e; font-size: 17px; }
+  .header { text-align: center; border-bottom: 3px solid #f0a500; padding-bottom: 20px; margin-bottom: 25px; }
+  .header h1 { font-size: 32px; font-weight: 900; color: #1a1a2e; }
+  .header p { color: #666; margin-top: 5px; font-size: 16px; }
+  .summary { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+  .sum-box { flex: 1; min-width: 130px; border: 1px solid #ddd; border-radius: 10px; padding: 15px; text-align: center; }
+  .sum-box .label { font-size: 14px; color: #888; margin-bottom: 6px; }
+  .sum-box .val { font-size: 26px; font-weight: 700; }
+  .sum-box.net { background: #f0fdf4; border-color: #22c55e; }
+  .sum-box.net .val { color: #16a34a; }
+  .sum-box.ret .val { color: #dc2626; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  th { background: #1a1a2e; color: #fff; padding: 14px 16px; text-align: right; font-size: 16px; }
+  td { padding: 13px 16px; border-bottom: 1px solid #eee; font-size: 16px; }
+  tr:nth-child(even) { background: #f9f9f9; }
+  .type-inv { color: #2563eb; font-weight: 600; }
+  .type-ret { color: #dc2626; font-weight: 600; }
+  .amount-ret { color: #dc2626; }
+  .total-row { background: #1a1a2e !important; color: #fff; font-weight: 700; }
+  .total-row td { color: #fff; font-size: 17px; }
+  .net-row { background: #f0fdf4 !important; }
+  .net-row td { color: #16a34a; font-weight: 700; font-size: 20px; }
+  .footer { margin-top: 30px; font-size: 14px; color: #999; text-align: center; border-top: 1px solid #eee; padding-top: 15px; }
+  @media print { body { padding: 15px; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>📋 تقرير فواتير المحبة</h1>
+  <p>تاريخ التقرير: ${new Date().toLocaleDateString('ar-EG', {year:'numeric',month:'long',day:'numeric'})}</p>
+</div>
+
+<div class="summary">
+  <div class="sum-box"><div class="label">عدد الفواتير</div><div class="val">${invoices.length}</div></div>
+  <div class="sum-box"><div class="label">إجمالي الفواتير</div><div class="val">${totalInv.toFixed(2)} ج</div></div>
+  <div class="sum-box ret"><div class="label">إجمالي المرتجعات</div><div class="val">${totalRet.toFixed(2)} ج</div></div>
+  <div class="sum-box net"><div class="label">💰 الصافي المطلوب</div><div class="val">${net.toFixed(2)} ج</div></div>
+</div>
+
+<table>
+  <thead><tr>
+    <th>#</th><th>رقم الوثيقة</th><th>التاريخ</th><th>النوع</th><th>المبلغ (جنيه)</th><th>ملاحظات</th>
+  </tr></thead>
+  <tbody>
+  ${sorted.map((e, i) => {
+    const isRet = e.type === 'return';
+    return `<tr>
+      <td>${i+1}</td>
+      <td><strong>${e.number || '—'}</strong></td>
+      <td>${formatDate(e.date)}</td>
+      <td class="${isRet ? 'type-ret' : 'type-inv'}">${isRet ? '↩️ مرتجع' : '📄 فاتورة'}</td>
+      <td class="${isRet ? 'amount-ret' : ''}">${isRet ? '-' : ''}${parseFloat(e.amount).toFixed(2)}</td>
+      <td>${e.notes || '—'}</td>
+    </tr>`;
+  }).join('')}
+  <tr class="total-row">
+    <td colspan="4" style="text-align:center">📊 إجمالي الفواتير</td>
+    <td colspan="2">${totalInv.toFixed(2)} جنيه</td>
+  </tr>
+  <tr style="background:#fff8e7!important">
+    <td colspan="4" style="text-align:center;color:#dc2626;font-weight:700">↩️ إجمالي المرتجعات</td>
+    <td colspan="2" style="color:#dc2626;font-weight:700">- ${totalRet.toFixed(2)} جنيه</td>
+  </tr>
+  <tr class="net-row">
+    <td colspan="4" style="text-align:center;font-size:15px">💰 الصافي المطلوب سداده</td>
+    <td colspan="2" style="font-size:16px">${net.toFixed(2)} جنيه</td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="footer">
+  تم إنشاء هذا التقرير تلقائياً • إجمالي السجلات: ${entries.length}
+</div>
+<script>window.onload = () => { window.print(); }<\/script>
+</body></html>`);
+  printWin.document.close();
+}
+
+// ===== UTILS =====
+function clearAll() {
+  if (entries.length === 0) return;
+  if (!confirm('هل تريد حذف كل البيانات؟ لا يمكن التراجع عن هذا!')) return;
+  entries = [];
+  save();
+  render();
+  showToast('تم مسح جميع البيانات', 'error');
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+});
+
+// Init
+render();
+updateKeyBtn();
+</script>
+</body>
+</html>
+`
