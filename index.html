@@ -49,6 +49,29 @@
 
   header p { color: var(--muted); font-size: 0.9rem; margin-top: 5px; }
 
+  .company-select {
+    margin-top: 14px;
+    background: var(--card2);
+    color: var(--text);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    min-width: 220px;
+    cursor: pointer;
+  }
+  .company-row {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 10px; margin-bottom: 8px;
+  }
+  .company-row.active { border-color: var(--accent); }
+  .company-info { flex: 1; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
+  .company-info span { font-size: 0.78rem; color: var(--muted); }
+  .btn-mini { padding: 6px 10px; }
+
   .summary-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -314,6 +337,7 @@
 <header>
   <h1 id="mainTitle">📋 متابعة فواتير المحبة</h1>
   <p>تسجيل وتتبع الفواتير والمرتجعات — إجمالي صافي المبلغ المطلوب</p>
+  <select id="companySelect" class="company-select" onchange="switchCompany(this.value)"></select>
 </header>
 
 <!-- Summary -->
@@ -344,7 +368,7 @@
   <button class="btn btn-danger" onclick="openAddModal('return')">↩️ إضافة أشعار مرتجع</button>
   <button class="btn btn-success" onclick="exportPDF()">📄 تصدير تقرير PDF</button>
   <button class="btn btn-ghost" onclick="clearAll()">🗑️ مسح الكل</button>
-  <button class="btn btn-ghost" onclick="openCompanyModal()" id="companyBtn">🏢 اسم الشركة</button>
+  <button class="btn btn-ghost" onclick="openCompanyModal()" id="companyBtn">🏢 إدارة الشركات</button>
   <button class="btn btn-ghost" onclick="openKeyModal()" id="keyStatusBtn">🔑 API Key</button>
 </div>
 
@@ -400,20 +424,22 @@
   </div>
 </div>
 
-<!-- Company Name Modal -->
+<!-- Companies Modal -->
 <div class="modal-overlay" id="companyModal">
   <div class="modal">
-    <h2>🏢 اسم الشركة</h2>
-    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:16px;line-height:1.6">
-      اكتب اسم الشركة اللي بتتعامل معاها — هيظهر في العنوان وفي تقرير الـ PDF.
+    <h2>🏢 الشركات</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:14px;line-height:1.6">
+      كل شركة ليها سجل فواتير منفصل. دوس على الشركة عشان تفتحها.
     </p>
-    <div class="form-group">
-      <label>اسم الشركة</label>
-      <input type="text" id="companyInput" placeholder="مثال: المحبة" maxlength="60" autocomplete="off">
+    <div id="companyList"></div>
+    <div class="form-group" style="margin-top:18px">
+      <label>➕ إضافة شركة جديدة</label>
+      <input type="text" id="newCompanyInput" placeholder="اسم الشركة" maxlength="60" autocomplete="off"
+             onkeydown="if(event.key==='Enter')addCompany()">
     </div>
     <div class="modal-actions">
-      <button class="btn btn-primary" onclick="saveCompany()" style="flex:1">💾 حفظ</button>
-      <button class="btn btn-ghost" onclick="closeModal('companyModal')">إلغاء</button>
+      <button class="btn btn-primary" onclick="addCompany()" style="flex:1">➕ إضافة وفتح</button>
+      <button class="btn btn-ghost" onclick="closeModal('companyModal')">إغلاق</button>
     </div>
   </div>
 </div>
@@ -517,10 +543,38 @@
 
 <script>
 // ===== DATA =====
-let entries = JSON.parse(localStorage.getItem('mahaba_entries') || '[]');
+const DEFAULT_COMPANY = 'المحبة';
+
+function loadCompanies() {
+  let list = null;
+  try { list = JSON.parse(localStorage.getItem('mahaba_companies') || 'null'); } catch (e) {}
+  if (!Array.isArray(list) || !list.length) {
+    // أول مرة: الشركة الأولى بتاخد البيانات القديمة زي ما هي
+    list = [{ id: 'default', name: localStorage.getItem('mahaba_company') || DEFAULT_COMPANY }];
+    localStorage.setItem('mahaba_companies', JSON.stringify(list));
+  }
+  return list;
+}
+
+function saveCompanies() {
+  localStorage.setItem('mahaba_companies', JSON.stringify(companies));
+}
+
+function entriesKey(id) {
+  return id === 'default' ? 'mahaba_entries' : 'mahaba_entries_' + id;
+}
+
+function loadEntries(id) {
+  try { return JSON.parse(localStorage.getItem(entriesKey(id)) || '[]'); } catch (e) { return []; }
+}
+
+let companies = loadCompanies();
+let activeId = localStorage.getItem('mahaba_active');
+if (!companies.some(c => c.id === activeId)) activeId = companies[0].id;
+let entries = loadEntries(activeId);
 
 function save() {
-  localStorage.setItem('mahaba_entries', JSON.stringify(entries));
+  localStorage.setItem(entriesKey(activeId), JSON.stringify(entries));
 }
 
 function genId() {
@@ -664,11 +718,9 @@ function closeModal(id) {
   document.getElementById(id).classList.remove('active');
 }
 
-// ===== COMPANY NAME =====
-const DEFAULT_COMPANY = 'المحبة';
-
+// ===== COMPANIES =====
 function getCompany() {
-  return localStorage.getItem('mahaba_company') || DEFAULT_COMPANY;
+  return (companies.find(c => c.id === activeId) || companies[0]).name;
 }
 
 function escHtml(str) {
@@ -678,23 +730,83 @@ function escHtml(str) {
 function applyCompany() {
   const name = getCompany();
   document.getElementById('mainTitle').textContent = '📋 متابعة فواتير ' + name;
-  document.getElementById('pageTitle').textContent = 'متابعة فواتير ' + name;
   document.title = 'متابعة فواتير ' + name;
+  document.getElementById('companySelect').innerHTML = companies
+    .map(c => `<option value="${c.id}" ${c.id === activeId ? 'selected' : ''}>🏢 ${escHtml(c.name)}</option>`)
+    .join('');
+  renderCompanyList();
+}
+
+function renderCompanyList() {
+  const box = document.getElementById('companyList');
+  if (!box) return;
+  box.innerHTML = companies.map(c => {
+    const n = loadEntries(c.id).length;
+    const active = c.id === activeId;
+    return `<div class="company-row ${active ? 'active' : ''}">
+      <div class="company-info" onclick="switchCompany('${c.id}'); closeModal('companyModal')">
+        <strong>${escHtml(c.name)}</strong>
+        <span>${n} سجل${active ? ' • الحالية' : ''}</span>
+      </div>
+      <button class="btn btn-ghost btn-mini" onclick="renameCompany('${c.id}')" title="تعديل الاسم">✏️</button>
+      <button class="btn btn-ghost btn-mini" onclick="deleteCompany('${c.id}')" title="حذف">🗑️</button>
+    </div>`;
+  }).join('');
+}
+
+function switchCompany(id) {
+  if (!companies.some(c => c.id === id)) return;
+  activeId = id;
+  localStorage.setItem('mahaba_active', id);
+  entries = loadEntries(id);
+  applyCompany();
+  render();
+  showToast('✅ ' + getCompany(), 'success');
 }
 
 function openCompanyModal() {
-  document.getElementById('companyInput').value = getCompany();
+  renderCompanyList();
+  document.getElementById('newCompanyInput').value = '';
   document.getElementById('companyModal').classList.add('active');
-  setTimeout(() => document.getElementById('companyInput').select(), 50);
 }
 
-function saveCompany() {
-  const name = document.getElementById('companyInput').value.trim();
+function addCompany() {
+  const input = document.getElementById('newCompanyInput');
+  const name = input.value.trim();
   if (!name) { showToast('اكتب اسم الشركة', 'error'); return; }
-  localStorage.setItem('mahaba_company', name);
-  applyCompany();
+  if (companies.some(c => c.name === name)) { showToast('الشركة دي موجودة بالفعل', 'error'); return; }
+  const id = genId();
+  companies.push({ id, name });
+  saveCompanies();
+  input.value = '';
+  switchCompany(id);
   closeModal('companyModal');
-  showToast('✅ تم تغيير اسم الشركة', 'success');
+}
+
+function renameCompany(id) {
+  const c = companies.find(x => x.id === id);
+  const name = (prompt('اسم الشركة الجديد:', c.name) || '').trim();
+  if (!name || name === c.name) return;
+  c.name = name;
+  saveCompanies();
+  applyCompany();
+  showToast('✅ تم تعديل الاسم', 'success');
+}
+
+function deleteCompany(id) {
+  if (companies.length === 1) { showToast('لازم تفضل شركة واحدة على الأقل', 'error'); return; }
+  const c = companies.find(x => x.id === id);
+  const n = loadEntries(id).length;
+  if (!confirm(`هتحذف "${c.name}" وكل سجلاتها (${n}). لا يمكن التراجع!`)) return;
+  localStorage.removeItem(entriesKey(id));
+  companies = companies.filter(x => x.id !== id);
+  saveCompanies();
+  if (id === activeId) {
+    switchCompany(companies[0].id);
+  } else {
+    applyCompany();
+  }
+  showToast('تم حذف الشركة', 'error');
 }
 
 // ===== API KEY =====
