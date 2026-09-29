@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>متابعة فواتير المحبة</title>
+<title id="pageTitle">متابعة فواتير المحبة</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
 
@@ -312,7 +312,7 @@
 <body>
 
 <header>
-  <h1>📋 متابعة فواتير المحبة</h1>
+  <h1 id="mainTitle">📋 متابعة فواتير المحبة</h1>
   <p>تسجيل وتتبع الفواتير والمرتجعات — إجمالي صافي المبلغ المطلوب</p>
 </header>
 
@@ -344,6 +344,7 @@
   <button class="btn btn-danger" onclick="openAddModal('return')">↩️ إضافة أشعار مرتجع</button>
   <button class="btn btn-success" onclick="exportPDF()">📄 تصدير تقرير PDF</button>
   <button class="btn btn-ghost" onclick="clearAll()">🗑️ مسح الكل</button>
+  <button class="btn btn-ghost" onclick="openCompanyModal()" id="companyBtn">🏢 اسم الشركة</button>
   <button class="btn btn-ghost" onclick="openKeyModal()" id="keyStatusBtn">🔑 API Key</button>
 </div>
 
@@ -395,6 +396,24 @@
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="saveEntry()" style="flex:1">💾 حفظ</button>
       <button class="btn btn-ghost" onclick="closeModal('addModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Company Name Modal -->
+<div class="modal-overlay" id="companyModal">
+  <div class="modal">
+    <h2>🏢 اسم الشركة</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:16px;line-height:1.6">
+      اكتب اسم الشركة اللي بتتعامل معاها — هيظهر في العنوان وفي تقرير الـ PDF.
+    </p>
+    <div class="form-group">
+      <label>اسم الشركة</label>
+      <input type="text" id="companyInput" placeholder="مثال: المحبة" maxlength="60" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveCompany()" style="flex:1">💾 حفظ</button>
+      <button class="btn btn-ghost" onclick="closeModal('companyModal')">إلغاء</button>
     </div>
   </div>
 </div>
@@ -643,6 +662,39 @@ function deleteEntry(id) {
 
 function closeModal(id) {
   document.getElementById(id).classList.remove('active');
+}
+
+// ===== COMPANY NAME =====
+const DEFAULT_COMPANY = 'المحبة';
+
+function getCompany() {
+  return localStorage.getItem('mahaba_company') || DEFAULT_COMPANY;
+}
+
+function escHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function applyCompany() {
+  const name = getCompany();
+  document.getElementById('mainTitle').textContent = '📋 متابعة فواتير ' + name;
+  document.getElementById('pageTitle').textContent = 'متابعة فواتير ' + name;
+  document.title = 'متابعة فواتير ' + name;
+}
+
+function openCompanyModal() {
+  document.getElementById('companyInput').value = getCompany();
+  document.getElementById('companyModal').classList.add('active');
+  setTimeout(() => document.getElementById('companyInput').select(), 50);
+}
+
+function saveCompany() {
+  const name = document.getElementById('companyInput').value.trim();
+  if (!name) { showToast('اكتب اسم الشركة', 'error'); return; }
+  localStorage.setItem('mahaba_company', name);
+  applyCompany();
+  closeModal('companyModal');
+  showToast('✅ تم تغيير اسم الشركة', 'success');
 }
 
 // ===== API KEY =====
@@ -902,7 +954,7 @@ function exportPDF() {
 <html dir="rtl" lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>تقرير فواتير المحبة</title>
+<title>تقرير فواتير ${escHtml(getCompany())}</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -934,7 +986,7 @@ function exportPDF() {
 </head>
 <body>
 <div class="header">
-  <h1>📋 تقرير فواتير المحبة</h1>
+  <h1>📋 تقرير فواتير ${escHtml(getCompany())}</h1>
   <p>تاريخ التقرير: ${new Date().toLocaleDateString('ar-EG', {year:'numeric',month:'long',day:'numeric'})}</p>
 </div>
 
@@ -1011,6 +1063,7 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 // Init
 render();
 updateKeyBtn();
+applyCompany();
 </script>
 </body>
 </html>
