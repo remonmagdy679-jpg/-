@@ -1,0 +1,32 @@
+export const EVA_COCONUT = {
+  brand: 'Eva',
+  title: 'Nourishing Body Lotion – Coconut Scent',
+  headline: 'Your holiday shower deserves a better finish.',
+  intro: 'Eva Optimum Care Recipe Nourishing Blend Lotion for normal skin, with coconut oil, vitamin E and almond oil. Formulated to enhance suppleness and smoothness, delicately scented with coconut.',
+  story: [
+    'Picture it. You have just stepped out of the shower at the end of a long, golden day in Marsa Alam. The towel is still around you. The evening is ahead of you.',
+    'This is the moment for a little ritual.',
+    'Take some Nourishing Blend in your hands and smooth it over your arms, your legs, your shoulders. It is delicately scented with coconut, a small reminder of the holiday. Made for supple, smooth skin, and a quiet moment that is only yours, before dinner.',
+  ],
+  whatHeading: 'What You Get',
+  what: [
+    'Coconut oil, vitamin E and almond oil: the featured ingredients of this Nourishing Blend, formulated to enhance suppleness and smoothness.',
+    'Delicately scented with coconut.',
+    '370 ml, from the Optimum Care Recipe range.',
+    'Free from parabens, phthalates and colorants.',
+    'Made for normal skin.',
+  ],
+  homeHeading: 'Bring a Little of It Home',
+  home: 'A coconut scent to remind you of the holiday, in a bottle that fits your bathroom shelf at home. Thinking of someone who could not come? Add a second bottle to your selection and we will confirm availability and prepare both for you at the pharmacy.',
+  faqHeading: 'Good to Know',
+  faq: [
+    ['Is it right for my skin?', 'Nourishing Blend is made for normal skin. For dry skin, ask us about the Eva Revival Blend with peach scent.'],
+    ['What is the scent?', 'Coconut, delicately scented.'],
+    ['What are the featured ingredients?', 'Coconut oil, vitamin E and almond oil. It is free from parabens, phthalates and colorants.'],
+    ['How big is it?', '370 ml.'],
+    ['How do I get it?', 'Add it to your selection. We will confirm availability and prepare it for you at the pharmacy, and you can ask us anything about it.'],
+  ],
+  selectionHeading: 'Your Royal Selection',
+  selection: 'Add it to your selection and we will confirm availability and prepare it for you at the pharmacy.',
+  button: 'ADD TO MY SELECTION',
+};

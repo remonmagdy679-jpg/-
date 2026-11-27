@@ -1,3 +1,4 @@
+import { it } from './it-dict';
 import honey from './photos/eva-honey.jpg';
 import glyc from './photos/eva-glyc.jpg';
 import soft from './photos/eva-soft.jpg';
@@ -11,13 +12,31 @@ import oRsa from './photos/orga-rsa.jpg';
 import oShea from './photos/orga-shea.jpg';
 import lMocha from './photos/lot-mocha.jpg';
 import lCoco from './photos/lot-coco.jpg';
-import lBerry from './photos/lot-berry.jpg';
+import lBerry from './photos/eva-berries-enhanced.jpg';
 import lPeach from './photos/lot-peach.jpg';
 import lPassion from './photos/eva-passion-ai.jpg';
 import type { Lang } from './data';
+import dr_miswak from './photos/dr-miswak.jpg';
+import dr_musk from './photos/dr-musk.jpg';
+import dr_fantasy from './photos/dr-fantasy.jpg';
+import dr_golden from './photos/dr-golden.jpg';
+import dr_mixed from './photos/dr-mixed.jpg';
+import dr_oud_blue from './photos/dr-oud_blue.jpg';
+import dr_oud_spirit from './photos/dr-oud_spirit.jpg';
+import dr_oud_khaligy from './photos/dr-oud_khaligy.jpg';
+import dr_kalimat from './photos/dr-kalimat.jpg';
+import dr_naseem from './photos/dr-naseem.jpg';
+import dr_wisal from './photos/dr-wisal.jpg';
+import dr_lafli from './photos/dr-lafli.jpg';
+import dr_escape from './photos/dr-escape.jpg';
+import dr_flora from './photos/dr-flora.jpg';
+import dr_dof from './photos/dr-dof.jpg';
+import dr_shruti from './photos/dr-shruti.jpg';
+import dr_moon from './photos/dr-moon.jpg';
+
 
 type T = Record<Lang, string>;
-const t = (en: string, de: string, pl: string, cs: string, nl: string, fr: string): T => ({ en, de, pl, cs, nl, fr });
+const t = (en: string, de: string, pl: string, cs: string, nl: string, fr: string): T => ({ en, de, pl, cs, nl, fr, it: it(en) });
 
 // The pharmacy's own photos of the 170g jars. Other sizes reuse the image as a labelled representative image.
 // kind: own = item list says 170g; rep = other size, pharmacy says same design; fam = list entry gives no size.
@@ -52,8 +71,29 @@ export const LOTION: Record<string, Pack> = {
     'body-12': lot(lBerry, 'Eva Optimum Care Recipe Hydrating Blend Lotion Berries Scent', 'Eva Optimum Care · Recipe · HYDRATING BLEND Lotion · FOR NORMAL SKIN · Berries Scent · FREE: Paraben, Phthalate, Colorants · VEGAN'),
     'body-14': lot(lPeach, 'Eva Optimum Care Recipe Revival Blend Lotion For Dry Skin Peach Scent', 'Eva Optimum Care · Recipe · REVIVAL BLEND Lotion · FOR DRY SKIN · Peach Scent · FREE: Paraben, Phthalate, Colorants · VEGAN', { named: 'Argan oil, avocado oil, shea butter', use: LOT_USE }),
 };
+const DRN: Record<string, string> = {"deo-06": "Eloud Elmalky Deodorant cream Musk Dust", "deo-07": "Eloud Elmalky Deodorant cream Fantasy", "deo-08": "Eloud Elmalky Deodorant cream Golden", "deo-09": "Eloud Elmalky Deodorant cream Mixed Royal", "deo-10": "Eloud Elmalky Deodorant cream Oud Fragrance", "deo-11": "Eloud Elmalky Deodorant cream Oud Spirit", "deo-12": "Eloud Elmalky Deodorant cream Oud Khaligy", "deo-43": "Khamriyah Al Malika perfumed cream Kalimat", "kha-naseem": "Khamriyah Al Malika perfumed cream Naseem Malaki", "kha-wisal": "Khamriyah Al Malika perfumed cream Wisal", "kha-lafli": "Khamriyah Al Malika perfumed cream Lafli", "kha-escape": "Khamriyah Al Malika perfumed cream Escape", "kha-flora": "Khamriyah Al Malika perfumed cream Flora", "kha-dof": "Khamriyah Al Malika perfumed cream Dof", "kha-shruti": "Khamriyah Al Malika perfumed cream Shruti", "kha-moon": "Khamriyah Al Malika perfumed cream Moon"};
+const DRF = DRN;
+const DRPACKS: Record<string, Pack> = {
+    'deo-06': { photo: dr_musk, name: DRN['deo-06'], front: DRF['deo-06'], kind: 'pk' },
+    'deo-07': { photo: dr_fantasy, name: DRN['deo-07'], front: DRF['deo-07'], kind: 'pk' },
+    'deo-08': { photo: dr_golden, name: DRN['deo-08'], front: DRF['deo-08'], kind: 'pk' },
+    'deo-09': { photo: dr_mixed, name: DRN['deo-09'], front: DRF['deo-09'], kind: 'pk' },
+    'deo-10': { photo: dr_oud_blue, name: DRN['deo-10'], front: DRF['deo-10'], kind: 'pk' },
+    'deo-11': { photo: dr_oud_spirit, name: DRN['deo-11'], front: DRF['deo-11'], kind: 'pk' },
+    'deo-12': { photo: dr_oud_khaligy, name: DRN['deo-12'], front: DRF['deo-12'], kind: 'pk' },
+    'deo-43': { photo: dr_kalimat, name: DRN['deo-43'], front: DRF['deo-43'], kind: 'pk' },
+    'kha-naseem': { photo: dr_naseem, name: DRN['kha-naseem'], front: DRF['kha-naseem'], kind: 'pk' },
+    'kha-wisal': { photo: dr_wisal, name: DRN['kha-wisal'], front: DRF['kha-wisal'], kind: 'pk' },
+    'kha-lafli': { photo: dr_lafli, name: DRN['kha-lafli'], front: DRF['kha-lafli'], kind: 'pk' },
+    'kha-escape': { photo: dr_escape, name: DRN['kha-escape'], front: DRF['kha-escape'], kind: 'pk' },
+    'kha-flora': { photo: dr_flora, name: DRN['kha-flora'], front: DRF['kha-flora'], kind: 'pk' },
+    'kha-dof': { photo: dr_dof, name: DRN['kha-dof'], front: DRF['kha-dof'], kind: 'pk' },
+    'kha-shruti': { photo: dr_shruti, name: DRN['kha-shruti'], front: DRF['kha-shruti'], kind: 'pk' },
+    'kha-moon': { photo: dr_moon, name: DRN['kha-moon'], front: DRF['kha-moon'], kind: 'pk' },
+};
 export const PACKS: Record<string, Pack> = {
-    ...ORGA, ...LOTION,
+    ...ORGA, ...LOTION, ...DRPACKS,
+    'oral-01': { photo: dr_miswak, name: 'Dabur Miswak Original Herbal Toothpaste', front: 'Dabur Miswak Original Herbal Toothpaste', kind: 'ai' },
     'body-06': { ...HONEY, kind: 'own' }, 'body-09': HONEY, 'body-07': HONEY,
     'body-10': { ...GLYC, kind: 'own' }, 'body-05': GLYC, 'eva-glyc-25': GLYC,
     'body-01': { ...SOFT, kind: 'own' }, 'body-03': SOFT, 'eva-soft-25': SOFT,

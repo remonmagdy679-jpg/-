@@ -1,4 +1,5 @@
 export type Fact = { t: string[]; u: string; m: 'exact' | 'range' };
+import { it } from './it-dict';
 export const FACTS: Record<string, Fact> = {
 "body-01": {
 "t": [
@@ -26,7 +27,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-02": {
 "t": [
-"Eva Skin Care cream with yoghurt and cucumber. The maker lists it for oily skin.",
+"Eva Skin Care cream with yoghurt and cucumber. Listed for oily skin.",
 "Eva Skin Care Creme mit Joghurt und Gurke. Laut Hersteller für fettige Haut.",
 "Krem Eva Skin Care: jogurt i ogórek. Producent wskazuje: dla skóry tłustej.",
 "Krém Eva Skin Care: jogurt a okurka. Výrobce ji uvádí pro mastnou pleť.",
@@ -38,7 +39,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-04": {
 "t": [
-"Eva Skin Care cream with yoghurt and cucumber. The maker lists it for oily skin.",
+"Eva Skin Care cream with yoghurt and cucumber. Listed for oily skin.",
 "Eva Skin Care Creme mit Joghurt und Gurke. Laut Hersteller für fettige Haut.",
 "Krem Eva Skin Care: jogurt i ogórek. Producent wskazuje: dla skóry tłustej.",
 "Krém Eva Skin Care: jogurt a okurka. Výrobce ji uvádí pro mastnou pleť.",
@@ -50,7 +51,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-05": {
 "t": [
-"Eva Skin Care cream with glycerin. The maker lists it for dry skin.",
+"Eva Skin Care cream with glycerin. Listed for dry skin.",
 "Eva Skin Care Creme mit Glycerin. Laut Hersteller für trockene Haut.",
 "Krem Eva Skin Care: gliceryna. Producent wskazuje: dla skóry suchej.",
 "Krém Eva Skin Care: glycerin. Výrobce ji uvádí pro suchou pleť.",
@@ -62,7 +63,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-10": {
 "t": [
-"Eva Skin Care cream with glycerin. The maker lists it for dry skin.",
+"Eva Skin Care cream with glycerin. Listed for dry skin.",
 "Eva Skin Care Creme mit Glycerin. Laut Hersteller für trockene Haut.",
 "Krem Eva Skin Care: gliceryna. Producent wskazuje: dla skóry suchej.",
 "Krém Eva Skin Care: glycerin. Výrobce ji uvádí pro suchou pleť.",
@@ -74,7 +75,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-06": {
 "t": [
-"Eva Skin Care cream with honey. The maker lists it for normal skin.",
+"Eva Skin Care cream with honey. Listed for normal skin.",
 "Eva Skin Care Creme mit Honig. Laut Hersteller für normale Haut.",
 "Krem Eva Skin Care: miód. Producent wskazuje: dla skóry normalnej.",
 "Krém Eva Skin Care: med. Výrobce ji uvádí pro normální pleť.",
@@ -86,7 +87,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-09": {
 "t": [
-"Eva Skin Care cream with honey. The maker lists it for normal skin.",
+"Eva Skin Care cream with honey. Listed for normal skin.",
 "Eva Skin Care Creme mit Honig. Laut Hersteller für normale Haut.",
 "Krem Eva Skin Care: miód. Producent wskazuje: dla skóry normalnej.",
 "Krém Eva Skin Care: med. Výrobce ji uvádí pro normální pleť.",
@@ -98,7 +99,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-11": {
 "t": [
-"Body lotion from Eva's Optimum Care Recipe range, mocha scent. The maker lists it for normal skin.",
+"Body lotion from Eva's Optimum Care Recipe range, mocha scent. Listed for normal skin.",
 "Körperlotion aus der Eva Optimum Care Recipe Linie, Duft: Mokka. Laut Hersteller für normale Haut.",
 "Balsam do ciała z linii Eva Optimum Care Recipe, zapach: mokka. Producent wskazuje: dla skóry normalnej.",
 "Tělové mléko z řady Eva Optimum Care Recipe, vůně: mocca. Výrobce ji uvádí pro normální pleť.",
@@ -110,7 +111,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-12": {
 "t": [
-"Body lotion from Eva's Optimum Care Recipe range, berries scent. The maker lists it for normal skin.",
+"Body lotion from Eva's Optimum Care Recipe range, berries scent. Listed for normal skin.",
 "Körperlotion aus der Eva Optimum Care Recipe Linie, Duft: Beeren. Laut Hersteller für normale Haut.",
 "Balsam do ciała z linii Eva Optimum Care Recipe, zapach: jagody. Producent wskazuje: dla skóry normalnej.",
 "Tělové mléko z řady Eva Optimum Care Recipe, vůně: lesní plody. Výrobce ji uvádí pro normální pleť.",
@@ -122,7 +123,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-13": {
 "t": [
-"Body lotion from Eva's Optimum Care Recipe range, coconut scent. The maker lists it for normal skin.",
+"Body lotion from Eva's Optimum Care Recipe range, coconut scent. Listed for normal skin.",
 "Körperlotion aus der Eva Optimum Care Recipe Linie, Duft: Kokos. Laut Hersteller für normale Haut.",
 "Balsam do ciała z linii Eva Optimum Care Recipe, zapach: kokos. Producent wskazuje: dla skóry normalnej.",
 "Tělové mléko z řady Eva Optimum Care Recipe, vůně: kokos. Výrobce ji uvádí pro normální pleť.",
@@ -134,7 +135,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-14": {
 "t": [
-"Body lotion from Eva's Optimum Care Recipe range, peach scent. The maker lists it for dry skin.",
+"Body lotion from Eva's Optimum Care Recipe range, peach scent. Listed for dry skin.",
 "Körperlotion aus der Eva Optimum Care Recipe Linie, Duft: Pfirsich. Laut Hersteller für trockene Haut.",
 "Balsam do ciała z linii Eva Optimum Care Recipe, zapach: brzoskwinia. Producent wskazuje: dla skóry suchej.",
 "Tělové mléko z řady Eva Optimum Care Recipe, vůně: broskev. Výrobce ji uvádí pro suchou pleť.",
@@ -146,7 +147,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-15": {
 "t": [
-"Body lotion from Eva's Optimum Care Recipe range, vanilla scent. The maker lists it for sensitive skin.",
+"Body lotion from Eva's Optimum Care Recipe range, vanilla scent. Listed for sensitive skin.",
 "Körperlotion aus der Eva Optimum Care Recipe Linie, Duft: Vanille. Laut Hersteller für empfindliche Haut.",
 "Balsam do ciała z linii Eva Optimum Care Recipe, zapach: wanilia. Producent wskazuje: dla skóry wrażliwej.",
 "Tělové mléko z řady Eva Optimum Care Recipe, vůně: vanilka. Výrobce ji uvádí pro citlivou pleť.",
@@ -242,7 +243,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "face-10": {
 "t": [
-"Eva Skin Clinic anti-ageing range: facial serum with 10% niacinamide and 1% zinc as listed by the maker.",
+"Eva Skin Clinic anti-ageing range: facial serum with 10% niacinamide and 1% zinc.",
 "Eva Skin Clinic Anti-Ageing-Linie: Gesichtsserum mit 10 % Niacinamid und 1 % Zink laut Hersteller.",
 "Linia Eva Skin Clinic anti-ageing: serum do twarzy z 10% niacynamidu i 1% cynku wg producenta.",
 "Řada Eva Skin Clinic anti-ageing: pleťové sérum s 10 % niacinamidu a 1 % zinku podle výrobce.",
@@ -254,7 +255,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "deo-02": {
 "t": [
-"Men's deodorant body spray. Scent notes listed by the maker: cardamom, ginger, grapefruit, pear (top notes). Use: hold the can about 15 cm from the body.",
+"Men's deodorant body spray. Scent notes: cardamom, ginger, grapefruit, pear (top notes). Use: hold the can about 15 cm from the body.",
 "Deo-Bodyspray für Männer. Duftnoten laut Hersteller: Kardamom, Ingwer, Grapefruit, Birne (Kopfnoten). Anwendung: Dose etwa 15 cm vom Körper entfernt halten.",
 "Dezodorant w sprayu dla mężczyzn. Nuty zapachowe według producenta: kardamon, imbir, grejpfrut, gruszka (nuty głowy). Użycie: trzymaj puszkę ok. 15 cm od ciała.",
 "Pánský deodorant ve spreji. Vonné tóny podle výrobce: kardamom, zázvor, grapefruit, hruška (hlavní tóny). Použití: držte sprej asi 15 cm od těla.",
@@ -266,7 +267,7 @@ export const FACTS: Record<string, Fact> = {
 },
 "body-26": {
 "t": [
-"Vaseline Ice Cool Hydration body lotion. The maker describes a moisturizing lotion with a hint of natural tone.",
+"Vaseline Ice Cool Hydration body lotion. A moisturizing lotion with a hint of natural tone.",
 "Vaseline Ice Cool Hydration Bodylotion. Laut Hersteller eine feuchtigkeitsspendende Lotion mit einem Hauch natürlicher Tönung.",
 "Balsam do ciała Vaseline Ice Cool Hydration. Producent opisuje nawilżający balsam z lekkim naturalnym odcieniem.",
 "Tělové mléko Vaseline Ice Cool Hydration. Výrobce popisuje hydratační mléko s nádechem přirozeného odstínu.",
@@ -278,12 +279,12 @@ export const FACTS: Record<string, Fact> = {
 },
 "deo-55": {
 "t": [
-"Rexona Men Xtra Cool antiperspirant roll-on. The maker states up to 48 hours of sweat and odour protection and that it is alcohol free.",
-"Rexona Men Xtra Cool Antitranspirant Roll-on. Laut Hersteller bis zu 48 Stunden Schutz vor Schweiß und Geruch, alkoholfrei.",
-"Antyperspirant w kulce Rexona Men Xtra Cool. Producent podaje do 48 godzin ochrony przed potem i zapachem, bez alkoholu.",
-"Kuličkový antiperspirant Rexona Men Xtra Cool. Výrobce uvádí ochranu před potem a zápachem až 48 hodin, bez alkoholu.",
-"Rexona Men Xtra Cool antitranspirant roller. De fabrikant geeft tot 48 uur bescherming tegen zweet en geur aan, alcoholvrij.",
-"Anti-transpirant bille Rexona Men Xtra Cool. Le fabricant indique jusqu'à 48 h de protection contre la transpiration et les odeurs, sans alcool."
+"Rexona Men Xtra Cool antiperspirant roll-on for men.",
+"Rexona Men Xtra Cool Antitranspirant Roll-on für Männer.",
+"Antyperspirant w kulce Rexona Men Xtra Cool dla mężczyzn.",
+"Kuličkový antiperspirant Rexona Men Xtra Cool pro muže.",
+"Rexona Men Xtra Cool antitranspirant roller voor mannen.",
+"Anti-transpirant bille Rexona Men Xtra Cool pour hommes."
 ],
 "u": "https://www.rexona.com/eg/en/p/men-antiperspirant-roll-on-extra-cool.html/06221155026125",
 "m": "exact"
@@ -396,6 +397,7 @@ export const FACTS: Record<string, Fact> = {
 "u": "https://www.trichup.com/en/trichup-healthy-long-strong-hair-oil/",
 "m": "exact"
 },
-"face-11": {"t": ["Garnier SkinActive micellar cleansing water. The maker lists it for all skin types, including sensitive skin, for face, eyes and lips. Use: wipe over the skin with a cotton pad, no rinsing needed.", "Garnier SkinActive Mizellenwasser. Laut Hersteller für alle Hauttypen, auch empfindliche Haut, für Gesicht, Augen und Lippen. Anwendung: mit einem Wattepad über die Haut wischen, nicht abspülen.", "Woda micelarna Garnier SkinActive. Według producenta dla każdego typu skóry, także wrażliwej, do twarzy, oczu i ust. Użycie: przetrzyj skórę wacikiem, bez spłukiwania.", "Micelární voda Garnier SkinActive. Výrobce ji uvádí pro všechny typy pleti včetně citlivé, pro obličej, oči a rty. Použití: otřete pleť vatovým tampónem, bez oplachování.", "Garnier SkinActive micellair water. De fabrikant vermeldt het voor alle huidtypes, ook de gevoelige huid, voor gezicht, ogen en lippen. Gebruik: met een wattenschijfje over de huid vegen, niet afspoelen.", "Eau micellaire Garnier SkinActive. Le fabricant l’indique pour tous types de peau, y compris sensible, pour le visage, les yeux et les lèvres. Utilisation : passer un coton sur la peau, sans rincer."], "u": "https://www.garnierarabia.com/en/about-our-brands/skinactive/micellar-cleansing-water/micellar-cleansing-water", "m": "exact"},
-"face-12": {"t": ["Garnier SkinActive micellar cleansing water with vitamin C. The maker lists it for the face, eyes and lips. Use: shake and apply with a cotton pad.", "Garnier SkinActive Mizellenwasser mit Vitamin C. Laut Hersteller für Gesicht, Augen und Lippen. Anwendung: schütteln und mit einem Wattepad auftragen.", "Woda micelarna Garnier SkinActive z witaminą C. Według producenta do twarzy, oczu i ust. Użycie: wstrząśnij i nałóż wacikiem.", "Micelární voda Garnier SkinActive s vitaminem C. Výrobce ji uvádí pro obličej, oči a rty. Použití: protřepejte a naneste vatovým tampónem.", "Garnier SkinActive micellair water met vitamine C. De fabrikant vermeldt het voor gezicht, ogen en lippen. Gebruik: schudden en met een wattenschijfje aanbrengen.", "Eau micellaire Garnier SkinActive à la vitamine C. Le fabricant l’indique pour le visage, les yeux et les lèvres. Utilisation : agiter et appliquer avec un coton."], "u": "https://www.garnierarabia.com/en/about-our-brands/skinactive/micellar-cleansing-water/micellar-brightening-water", "m": "exact"}
+"face-11": {"t": ["Garnier SkinActive micellar cleansing water. Listed for all skin types, including sensitive skin, for face, eyes and lips. Use: wipe over the skin with a cotton pad, no rinsing needed.", "Garnier SkinActive Mizellenwasser. Laut Hersteller für alle Hauttypen, auch empfindliche Haut, für Gesicht, Augen und Lippen. Anwendung: mit einem Wattepad über die Haut wischen, nicht abspülen.", "Woda micelarna Garnier SkinActive. Według producenta dla każdego typu skóry, także wrażliwej, do twarzy, oczu i ust. Użycie: przetrzyj skórę wacikiem, bez spłukiwania.", "Micelární voda Garnier SkinActive. Výrobce ji uvádí pro všechny typy pleti včetně citlivé, pro obličej, oči a rty. Použití: otřete pleť vatovým tampónem, bez oplachování.", "Garnier SkinActive micellair water. De fabrikant vermeldt het voor alle huidtypes, ook de gevoelige huid, voor gezicht, ogen en lippen. Gebruik: met een wattenschijfje over de huid vegen, niet afspoelen.", "Eau micellaire Garnier SkinActive. Le fabricant l’indique pour tous types de peau, y compris sensible, pour le visage, les yeux et les lèvres. Utilisation : passer un coton sur la peau, sans rincer."], "u": "https://www.garnierarabia.com/en/about-our-brands/skinactive/micellar-cleansing-water/micellar-cleansing-water", "m": "exact"},
+"face-12": {"t": ["Garnier SkinActive micellar cleansing water with vitamin C. Listed for the face, eyes and lips. Use: shake and apply with a cotton pad.", "Garnier SkinActive Mizellenwasser mit Vitamin C. Laut Hersteller für Gesicht, Augen und Lippen. Anwendung: schütteln und mit einem Wattepad auftragen.", "Woda micelarna Garnier SkinActive z witaminą C. Według producenta do twarzy, oczu i ust. Użycie: wstrząśnij i nałóż wacikiem.", "Micelární voda Garnier SkinActive s vitaminem C. Výrobce ji uvádí pro obličej, oči a rty. Použití: protřepejte a naneste vatovým tampónem.", "Garnier SkinActive micellair water met vitamine C. De fabrikant vermeldt het voor gezicht, ogen en lippen. Gebruik: schudden en met een wattenschijfje aanbrengen.", "Eau micellaire Garnier SkinActive à la vitamine C. Le fabricant l’indique pour le visage, les yeux et les lèvres. Utilisation : agiter et appliquer avec un coton."], "u": "https://www.garnierarabia.com/en/about-our-brands/skinactive/micellar-cleansing-water/micellar-brightening-water", "m": "exact"}
 };
+for (const k of Object.keys(FACTS)) { const x = FACTS[k]; if (x.t.length < 7) x.t.push(it(x.t[0])); }

@@ -1,0 +1,56 @@
+.mk, .mk *{box-sizing:border-box;margin:0}
+.mk{width:100%;max-width:480px;margin:0 auto;font-family:Georgia,serif;background:#f6efe0;color:#27261f;padding-bottom:70px}
+.mk .logo{font:700 13px Helvetica;letter-spacing:.28em;text-align:center;padding:16px;color:#1f4d33}
+.mk .hero{padding:6px 26px 34px;text-align:left}
+.mk .hero h1{font-size:40px;line-height:1.08;font-weight:400;letter-spacing:-.01em}
+.mk .hero h1 i{color:#a2562e}
+.mk .sub{font:16px/1.5 Georgia;margin-top:16px;color:#4b473b}
+.mk .art{margin:26px 0 0;background:#ebdfc6;border-radius:4px;padding:28px 36px 20px}
+.mk .cap{font:italic 12px Georgia;text-align:center;margin-top:6px;color:#7a735f}
+.mk .scroll{font:600 11px Helvetica;letter-spacing:.2em;margin-top:22px;color:#1f4d33}
+.mk .moment{padding:34px 26px;border-top:1px solid #d9cdb0;text-align:left}
+.mk .moment .n{font:italic 54px Georgia;color:#a2562e;line-height:1}
+.mk .moment p{font-size:21px;line-height:1.3;margin-top:8px}
+.mk .moment .cost{font:600 12px Helvetica;letter-spacing:.14em;text-transform:uppercase;color:#1f4d33;margin-top:14px}
+.mk .moment .ic{width:46px;margin-bottom:6px}
+.mk .bridge{padding:46px 26px;background:#1f4d33;color:#f6efe0;font-size:27px;line-height:1.25;text-align:left}
+.mk .bridge u{text-decoration:none;color:#e5c26c}
+.mk .reveal{background:#14291d;color:#f6efe0;padding:40px 22px;text-align:center}
+.mk .reveal .k{font:600 11px Helvetica;letter-spacing:.24em;color:#e5c26c}
+.mk .reveal h2{font-size:30px;font-weight:400;margin-top:10px;line-height:1.15}
+.mk .pack{width:310px;margin:22px auto 0;background:#f3e9d5;border-radius:6px;overflow:hidden}
+.mk .pack img{width:100%;display:block}
+.mk .vid{width:230px;margin:26px auto 0;border-radius:6px;overflow:hidden;position:relative}
+.mk .vid img{width:100%;display:block}
+.mk .vid i{position:absolute;left:50%;top:50%;margin:-27px;width:54px;height:54px;border-radius:50%;background:#fff;opacity:.9}
+.mk .vid i:after{content:'';position:absolute;left:21px;top:15px;border-left:17px solid #1f4d33;border-top:12px solid transparent;border-bottom:12px solid transparent}
+.mk .ft{padding:34px 26px;text-align:left;border-bottom:1px solid #d9cdb0}
+.mk .ft b{font:400 23px/1.2 Georgia;display:block}
+.mk .ft span{font:15px/1.5 Georgia;color:#5a5546;display:block;margin-top:6px}
+.mk .ft em{font:italic 13px Georgia;color:#a2562e}
+.mk .how{background:#ebdfc6;padding:36px 26px;text-align:left}
+.mk .how h3{font-size:26px;font-weight:400;margin-bottom:6px}
+.mk .st{display:flex;gap:16px;margin-top:20px}
+.mk .st .n{font:italic 40px Georgia;color:#a2562e;width:32px}
+.mk .st b{display:block;font:400 18px Georgia}
+.mk .st span{font:14px Georgia;color:#5a5546}
+.mk .trust{padding:34px 26px;text-align:left;font-size:19px;line-height:1.4}
+.mk .trust small{display:block;font:13px/1.5 Helvetica;color:#5a5546;margin-top:8px}
+.mk .act{background:#1f4d33;color:#f6efe0;padding:40px 24px;text-align:left}
+.mk .act h2{font-size:30px;font-weight:400;line-height:1.15}
+.mk .form{margin-top:22px}
+.mk .fld{background:#f6efe0;color:#8a8470;font:15px Helvetica;padding:15px;border-radius:3px;margin-bottom:10px}
+.mk .cta{background:#e5c26c;color:#1b1a14;font:700 15px Helvetica;letter-spacing:.12em;text-align:center;padding:16px;border-radius:3px;margin-top:6px}
+.mk .note{font:12px Helvetica;opacity:.8;margin-top:10px}
+.mk .sticky{position:absolute;left:0;top:0}
+.mk .endlogo{text-align:center;font:700 13px Helvetica;letter-spacing:.28em;padding:22px;background:#14291d;color:#e5c26c}
+.mk .bar{width:390px;background:#e5c26c;color:#1b1a14;font:700 15px Helvetica;letter-spacing:.12em;text-align:center;padding:19px}
+.mk .lang{display:flex;justify-content:center;gap:6px;padding:0 12px 10px}
+.mk .lang button{font:600 12px Helvetica;letter-spacing:.08em;border:1px solid #1f4d33;background:transparent;color:#1f4d33;padding:7px 10px;border-radius:99px}
+.mk .lang button[aria-pressed=true]{background:#1f4d33;color:#f6efe0}
+.mk input.fld{display:block;width:100%;border:0;color:#27261f}
+.mk .sticky{display:none}
+.mk .bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;border:0;z-index:5;cursor:pointer}
+.mk .ft b span,.mk .st b span{font:inherit;color:inherit;display:inline;margin:0}
+.mk{min-height:100vh;padding-bottom:70px}
+.mk .logo,.mk #lang{display:none}

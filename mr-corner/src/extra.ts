@@ -1,6 +1,7 @@
+import { it } from './it-dict';
 import type { Lang } from './data';
 type T = Record<Lang, string>;
-const t = (en: string, de: string, pl: string, cs: string, nl: string, fr: string): T => ({ en, de, pl, cs, nl, fr });
+const t = (en: string, de: string, pl: string, cs: string, nl: string, fr: string): T => ({ en, de, pl, cs, nl, fr, it: it(en) });
 
 // Pharmacy-style suggestions made from items already in the list. No prices, no offers.
 export const SETS = {
@@ -30,7 +31,7 @@ export const MEDS = t(
 export const POINTS = [
     { title: t('Long opening hours', 'Lange Öffnungszeiten', 'Długie godziny otwarcia', 'Dlouhá otevírací doba', 'Lange openingstijden', 'Longues heures d’ouverture'), body: t('Ask the pharmacy on WhatsApp for today’s hours.', 'Fragen Sie die Apotheke per WhatsApp nach den heutigen Zeiten.', 'Zapytaj aptekę na WhatsApp o dzisiejsze godziny.', 'Zeptejte se lékárny na WhatsApp na dnešní hodiny.', 'Vraag de apotheek via WhatsApp naar de uren van vandaag.', 'Demandez les horaires du jour à la pharmacie sur WhatsApp.') },
     { title: t('Inside the resort', 'Im Resort', 'W resorcie', 'Přímo v resortu', 'In het resort', 'Dans le resort'), body: t('No taxi and no trip into town. Collect at the pharmacy inside the resort.', 'Kein Taxi, keine Fahrt in die Stadt. Abholung in der Apotheke im Resort.', 'Bez taksówki i wyjazdu do miasta. Odbiór w aptece na terenie resortu.', 'Žádný taxík ani cesta do města. Vyzvednutí v lékárně v resortu.', 'Geen taxi en geen rit naar de stad. Ophalen bij de apotheek in het resort.', 'Pas de taxi ni de trajet en ville. Retrait à la pharmacie du resort.') },
-    { title: t('Browse in your language', 'In Ihrer Sprache stöbern', 'Przeglądaj w swoim języku', 'Prohlížejte ve svém jazyce', 'Bekijk in jouw taal', 'Parcourez dans votre langue'), body: t('This website is available in English, German, Polish, Czech, Dutch and French.', 'Diese Website gibt es auf Englisch, Deutsch, Polnisch, Tschechisch, Niederländisch und Französisch.', 'Ta strona jest dostępna po angielsku, niemiecku, polsku, czesku, niderlandzku i francusku.', 'Tyto stránky jsou k dispozici v angličtině, němčině, polštině, češtině, nizozemštině a francouzštině.', 'Deze website is beschikbaar in het Engels, Duits, Pools, Tsjechisch, Nederlands en Frans.', 'Ce site est disponible en anglais, allemand, polonais, tchèque, néerlandais et français.') },
+    { title: t('Browse in your language', 'In Ihrer Sprache stöbern', 'Przeglądaj w swoim języku', 'Prohlížejte ve svém jazyce', 'Bekijk in jouw taal', 'Parcourez dans votre langue'), body: t('This website is available in English, German, Polish, Czech, Dutch, French and Italian.', 'Diese Website gibt es auf Englisch, Deutsch, Polnisch, Tschechisch, Niederländisch, Französisch und Italienisch.', 'Ta strona jest dostępna po angielsku, niemiecku, polsku, czesku, niderlandzku, francusku i włosku.', 'Tyto stránky jsou k dispozici v angličtině, němčině, polštině, češtině, nizozemštině, francouzštině a italštině.', 'Deze website is beschikbaar in het Engels, Duits, Pools, Tsjechisch, Nederlands, Frans en Italiaans.', 'Ce site est disponible en anglais, allemand, polonais, tchèque, néerlandais, français et italien.') },
 ];
 
 export const VISIT = t(

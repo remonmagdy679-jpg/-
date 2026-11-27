@@ -1,12 +1,6 @@
-# Cleopatra frame sequence
+# Cleopatra media
 
-Empty on purpose until the video clip of Cleopatra arrives.
-
-`npm run cleo:frames -- path/to/cleo-clip.mp4` fills this folder:
-
-- `m/f001.webp` ... frames for phones (600 x 800)
-- `d/f001.webp` ... frames for wide screens (up to 900 x 1200)
-- `poster-m.webp`, `poster-d.webp` : the first frame, shown at once while the rest loads
-- `manifest.json` : frame count, sizes and framing
-
-The site (`src/living/frames.ts`) picks these up at build time. If the folder has no frames, the still portrait is shown and the page says it is a placeholder.
+- `clip.mp4` : the generated clip played in the home page hero (muted, looping).
+- `poster-m.webp` : its first frame, shown at once while the clip loads and when "reduce motion" is on.
+- `m/` and `manifest.json` : the same clip cut into 96 frames. Not used by the site today; kept for a scroll-driven
+  version. Rebuild them from a new clip with `npm run cleo:frames -- path/to/clip.mp4`.
